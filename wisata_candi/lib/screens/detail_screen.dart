@@ -35,6 +35,7 @@ class DetailScreen extends StatelessWidget {
             ],
           )
         //DetailInfo
+        Padding(
         padding:const EdgeInsets.symmetric(horizontal:16),
         child:Column(
           crossAxisAligment:crossAxisAligment.start,
@@ -81,8 +82,57 @@ class DetailScreen extends StatelessWidget {
             SizedBox(height:16,),
             Divider(color:Colors.deepPurple.shade100,),
             SizedBox(height:16,),
+          ],
+        ),
+      ),
+      Padding(
+        padding:const EdgeInsets.all(15),
+        child:Column(
+          crossAxisAligment:CrossAxisAligment.start,
+          children:[
+            divider(color:Colors.deepPurple.shade100,),
+            Text('Galeri',style:TextStyle(
+              fontSize:16,fontWeight:FontWeight.bold,
+            ),),
+            SizedBox(height:10,),
+            SizedBox(
+              height:100,
+              child:ListView.builder(scrollDirection:Axis.horizontal,itemCount:candi.imageUrls.length,itemBuilder:(context,index){
+                return Padding(padding:EdgeInsets.only(left:8)
+                child:GestureDetector(
+                  onTap:(){},
+                  child:Container(
+                    decoration:BoxDecoration(
+                      borderRadius:BorderRadius.circular(12),
+                      border:Border.all(
+                        color:colors.deepPurple.shade100,
+                        width:2,
+                      ),
+                    ),
+                    child:CachedNetworkImage(
+                      imageUrl:candi.imageUrls[index],
+                      width:120,
+                      height:120,
+                      fit:BoxFit.cover,
+                      placeholder:(context,url)=>Container(
+                        width:120,
+                        height:120,
+                        color:Colors.deepPurple[50],
+                      ),
+                      errorWidget:(context,url,error)=>Icon(Icons.error),
+                      ),
+                  ),
+                ),
+              );
+            },
+          ),
+            ),
+            SizedBox(height:4,),
+            Text('Tap untuk memperbesar',style:TextStyle(
+              fontSize:12,color:Colors.black54,),),
           ]
         )
+      )
         ],
       ),
     );
