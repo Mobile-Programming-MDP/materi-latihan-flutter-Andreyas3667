@@ -54,7 +54,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       errorText: _errorText.isNotEmpty ? _errorText : null,
                       border: OutlineInputBorder(),
                       suffixIcon: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_off
