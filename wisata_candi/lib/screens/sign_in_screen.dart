@@ -1,99 +1,111 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:wisata_candi/data/candi_data.dart';
+import 'package:wisata_candi/models/candi.dart';
 
-class SignInScreen extends StatefulWidget {
-  SignInScreen({super.key});
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  //TODO:1 Deklarasikan Variabel
-  final TextEditingController _usernameController = TextEditingController();
-
-  final TextEditingController _passwordController = TextEditingController();
-
-  String _errorText = '';
-
-  bool _isSignedIn = false;
-
-  bool _obscurePassword = true;
+class _SearchScreenState extends State<SearchScreen> {
+  // TODO 1: Deklarasi variable (state) yang dibutuhkan
+  List<Candi> _filterCandis = candiList;
+  String _searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //TODO:2 Pasang AppBar
+      //TODO 2: Buat Appbar dengan judul Pencarian Candi
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: const Text("Pencarian Candi"),
       ),
-      //TODO:3 Pasang Body
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                //TODO: 4.Atur mainAxisAligment dan crossAxisAligment
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //TODO: 5.Pasang TextFormField Username
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      labelText: "Username",
-                      border: OutlineInputBorder(),
-                    ),
+      //TODO 3: Buat Body berupa column
+      body: Column(
+        children: [
+          //Todo 4: Buat Textfield pencarian sebagain anak (child) dari column
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.deepPurple[50],
+              ),
+              child: const TextField(
+                autofocus: false,
+                //TODO 6 : Implementasi Fitur Pencarian
+                decoration: InputDecoration(
+                  hintText: "Cari Candi ...",
+                  prefixIcon: Icon(Icons.search),
+                  //TODO 7 : Implementasi pengososongan input
+                  border: InputBorder.none,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.deepPurple),
                   ),
-                  //TODO: 6.Pasang TextFormField Password
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      errorText: _errorText.isNotEmpty ? _errorText : null,
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          //Todo 5: Buat Listview hasil pencarian sebagai anak dari column
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filterCandis.length,
+              itemBuilder: (context, index) {
+                final candi = _filterCandis[index];
+                //TODO 8 : Implementasi Gesture Detector dan hero animation
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        width: 100,
+                        height: 100,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                            candi.imageAsset,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    obscureText: _obscurePassword,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              candi.name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Text(candi.location)
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  //TODO: 7.Pasang TextFormField Sign In
-                  SizedBox(height: 20),
-                  ElevatedButton(onPressed: () {}, child: Text('Sign In')),
-                  //TODO : 8. Pasang TextButton Sign Up
-                  SizedBox(height: 10),
-                  TextButton(
-                      onPressed: () {},
-                      child: Text('Belum Punya Akun? Daftar Di Sini')),
-                  RichText(
-                      text: TextSpan(
-                          text: 'Belum Punya Akun?',
-                          style:
-                              TextStyle(fontSize: 16, color: Colors.deepPurple),
-                          children: <TextSpan>[
-                        TextSpan(
-                          text: 'Daftar Disini',
-                          style: TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                              fontSize: 16),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
-                        )
-                      ]))
-                ],
-              )),
-        ),
+                );
+              },
+            ),
+          )
+        ],
       ),
     );
   }
