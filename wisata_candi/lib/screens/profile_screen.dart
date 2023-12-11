@@ -1,19 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wisata_candi/widget/profile_info_item.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreen();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
-
-class _ProfileScreen extends State<ProfileScreen> {
-  // TODO : 1. Deklarasi variabel (state) yang dibutuhkan
+    
+class _ProfileScreenState extends State<ProfileScreen> {
+  // TODO : 1. Deklarasi variabel (state) yang dibutuhkan 
   bool isSignIn = false;
-  String fullName = "";
-  String userName = "";
+  String fullName = '';
+  String userName = '';
   int favoriteCandiCount = 0;
+  late Color iconColor;
+
+  Future<void> simpanData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isSignIn = prefs.getBool('isSignIn') ?? false;
+      fullName = prefs.getString('fullname') ?? '';
+      userName = prefs.getString('username') ?? '';
+      favoriteCandiCount = prefs.getInt('favoriteCandiCount') ?? 0;
+    });
+  }
+
+  void signIn() {
+    Navigator.pushNamed(context, '/signin');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +37,7 @@ class _ProfileScreen extends State<ProfileScreen> {
       body: Stack(
         children: [
           Container(
-            height: 200,
-            width: double.infinity,
-            color: Colors.deepPurple,
+            height: 200, width: double.infinity, color: Colors.deepPurple,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -32,32 +46,34 @@ class _ProfileScreen extends State<ProfileScreen> {
                 // TODO : 2. Buat bagian ProfileHeader yang berisi foto profil
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 200 - 50),
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.deepOrange, width: 2),
-                                shape: BoxShape.circle),
-                            child: CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                                  AssetImage("images/placeholder_image.png"),
-                            ),
-                          ),
-                          if (isSignIn)
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.camera_alt),
-                              color: Colors.deepPurple,
-                            )
-                        ],
-                      )),
+                  child : Padding(
+                    padding: const EdgeInsets.only(top: 200 -50),
+                    child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.deepOrange, width: 2),
+                          shape: BoxShape.circle
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: AssetImage("images/placeholder_image.png"),
+                        ),
+                      ),
+                      if(isSignIn)
+                        IconButton(
+                          onPressed: () {}, 
+                          icon: Icon(
+                            Icons.camera_alt, 
+                            color: Colors.deepPurple[50],)
+                        ),
+                    ],
+                    ),  
+                  ),
                 ),
-                              Padding(
+                // TODO : 3. Buat bagian ProfileInfo yang berisi info profil
+                Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
@@ -109,6 +125,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                         value:
                             favoriteCandiCount > 0 ? '$favoriteCandiCount' : '',
                         iconColor: Colors.red),
+                     // TODO : 4. Buat bagian ProfileAction yang berisi TextButton Sign In / Sign Out
                     const SizedBox(
                       height: 5,
                     ),
@@ -138,11 +155,9 @@ class _ProfileScreen extends State<ProfileScreen> {
                   ],
                 ),
               ),
-                // TODO : 3. Buat bagian ProfileInfo yang berisi info profil
-                // TODO : 4. Buat bagian ProfileAction yang berisi TextButton Sign In / Sign Out
               ],
             ),
-          )
+          )   
         ],
       ),
     );

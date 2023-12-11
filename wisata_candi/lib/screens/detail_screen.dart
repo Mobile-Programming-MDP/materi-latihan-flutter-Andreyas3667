@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wisata_candi/models/candi.dart';
+import 'package:wisata_candi/widget/item_card.dart';
 
 class DetailScreen extends StatelessWidget {
   final Candi candi;
@@ -17,6 +18,7 @@ class DetailScreen extends StatelessWidget {
             Stack(
               children: [
                 // image utama
+                Hero(tag: candi.imageAsset, child: 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ClipRRect(
@@ -29,6 +31,7 @@ class DetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
                 // tombol back kustom
                 Padding(
                   padding: const EdgeInsets.symmetric(
